@@ -1,18 +1,29 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import tseslintParser from "@typescript-eslint/parser";
+import eslintPluginPrettier from "eslint-plugin-prettier";
 
-
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  {files: ["**/*.{js,mjs,cjs,ts}"]},
-  {languageOptions: { globals: {...globals.browser, ...globals.node, "process": "readonly"} }},
-  {
-    rules: {
-      "no-unused-vars": "error",
-     
+/** @type {import('eslint').Linter.Config} */
+export default {
+  root: true,
+  files: ["**/*.{js,mjs,cjs,ts}"],
+  languageOptions: {
+    parser: tseslintParser,
+    globals: {
+      ...globals.browser,
+      ...globals.node,
+      process: "readonly",
     },
   },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-];
+  plugins: ["@typescript-eslint", "prettier"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+  ],
+  rules: {
+    "no-unused-vars": "error", 
+    "prettier/prettier": "error", 
+  },
+};
