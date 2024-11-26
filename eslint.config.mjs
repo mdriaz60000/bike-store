@@ -23,7 +23,10 @@ export default {
     "plugin:prettier/recommended",
   ],
   rules: {
-    "no-unused-vars": "error", 
-    "prettier/prettier": "error", 
+    "no-unused-vars": "error",
+    "no-unused-expressions": "error",
+    "prefer-const": "error",
+    "no-console": "warn",
+    "no-undef": "error"
   },
 };
