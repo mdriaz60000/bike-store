@@ -11,8 +11,13 @@ const createProduct = async (req: Request, res: Response) => {
       massage: " create bike store product successfully",
       data: result,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error : any) {
+    res.status(400).json({
+      message: "create product failed",
+      success: false,
+      error: error,
+      stack: error.stack,
+    });
   }
 };
 
@@ -26,8 +31,13 @@ const getAllBike = async (req : Request, res: Response) =>{
     });
 
 
-  } catch (err) {
-    console.log(err)
+  }catch (error : any) {
+    res.status(400).json({
+      message: "get all product failed",
+      success: false,
+      error: error,
+      stack: error.stack,
+    });
   }
 }
 const getABike = async (req : Request, res: Response) =>{
@@ -41,8 +51,13 @@ const getABike = async (req : Request, res: Response) =>{
       massage: " get a bike",
       data: result,
     });
-  } catch (err) {
-    console.log(err)
+  } catch (error : any) {
+    res.status(400).json({
+      message: "get single bike failed",
+      success: false,
+      error: error,
+      stack: error.stack,
+    });
   }
 }
 
@@ -57,8 +72,13 @@ const updateBike = async (req : Request, res: Response) =>{
       massage: " update bike successfully",
       data: result,
     });
-  } catch (err) {
-    console.log(err)
+  } catch (error : any) {
+    res.status(400).json({
+      message: "updated failed",
+      success: false,
+      error: error,
+      stack: error.stack,
+    });
   }
 }
 const deleteABike = async (req : Request, res: Response) =>{
@@ -67,20 +87,25 @@ const deleteABike = async (req : Request, res: Response) =>{
   
  const result = await productService.deleteABikeDb(productId)
 
- if (!result) {
-  return res.status(404).json({
-    success: false,
-    message: "Bike not found or already deleted.",
-  });
-}
+//  if (result.deletedCount === 0) {
+//   return res.status(404).json({
+//     success: false,
+//     message: `Bike not found with ID: ${productId}`,
+//   });
+// }
 
     res.status(200).json({
       success: true,
       massage: " delete single bike successfully",
       data: result,
     });
-  } catch (err) {
-    console.log(err)
+  } catch (error : any) {
+    res.status(400).json({
+      message: "delete bike failed",
+      success: false,
+      error: error,
+      stack: error.stack,
+    });
   }
 }
 export const productControllers = {
