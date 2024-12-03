@@ -1,27 +1,25 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { productService } from "./product.service";
+import productSchemaValidation from "./zodvalidation";
 
-const createProduct = async (req: Request, res: Response) => {
+const createProduct = async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { products: productsData } = req.body;
 
-    const result = await productService.createProductIntoDb(productsData);
+    const productValidation = productSchemaValidation.parse(productsData)
+
+    const result = await productService.createProductIntoDb(productValidation);
     res.status(200).json({
       success: true,
       massage: " create bike store product successfully",
       data: result,
     });
-  } catch (error : any) {
-    res.status(400).json({
-      message: "create product failed",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
+  } catch (err : any) {
+    next(err)
   }
 };
 
-const getAllBike = async (req : Request, res: Response) =>{
+const getAllBike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
     const result = await productService.getAllProductDb()
     res.status(200).json({
@@ -31,16 +29,11 @@ const getAllBike = async (req : Request, res: Response) =>{
     });
 
 
-  }catch (error : any) {
-    res.status(400).json({
-      message: "get all product failed",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
+  }catch (err : any) {
+  next(err)
   }
 }
-const getABike = async (req : Request, res: Response) =>{
+const getABike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
   const  id = req.params._Id;
 
@@ -51,17 +44,12 @@ const getABike = async (req : Request, res: Response) =>{
       massage: " get a bike",
       data: result,
     });
-  } catch (error : any) {
-    res.status(400).json({
-      message: "get single bike failed",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
+  } catch (err : any) {
+   next(err)
   }
 }
 
-const updateBike = async (req : Request, res: Response) =>{
+const updateBike = async (req : Request, res: Response, next : NextFunction ) =>{
   try {
   const productId = req.params._Id
   const body = req.body
@@ -72,16 +60,11 @@ const updateBike = async (req : Request, res: Response) =>{
       massage: " update bike successfully",
       data: result,
     });
-  } catch (error : any) {
-    res.status(400).json({
-      message: "updated failed",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
+  } catch (err : any) {
+   next(err)
   }
 }
-const deleteABike = async (req : Request, res: Response) =>{
+const deleteABike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
   const productId = req.params._Id
   
@@ -99,13 +82,8 @@ const deleteABike = async (req : Request, res: Response) =>{
       massage: " delete single bike successfully",
       data: result,
     });
-  } catch (error : any) {
-    res.status(400).json({
-      message: "delete bike failed",
-      success: false,
-      error: error,
-      stack: error.stack,
-    });
+  } catch (err : any) {
+  next(err)
   }
 }
 export const productControllers = {
