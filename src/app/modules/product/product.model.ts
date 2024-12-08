@@ -3,7 +3,8 @@ import { product } from "./product.interface";
 
 
 
-const productSchema = new Schema<product>({
+const productSchema = new Schema<product>(
+  {
   name: { type: String, required: true },
   brand: { type: String, required: true },
   price: { type: Number, required: true, min: 0},
@@ -14,7 +15,12 @@ const productSchema = new Schema<product>({
   },
   description: { type: String, required: true },
   quantity: { type: Number, default: 1,min:0},
-  inStock: { type: Boolean, default: true }
-});
+  inStock: { type: Boolean, default: true },
+},
+{
+  timestamps: true,
+},
+);
+
 
 export const productModel = model<product>("product", productSchema);
