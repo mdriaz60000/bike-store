@@ -6,6 +6,7 @@ import cors from "cors";
 import { productRouter } from "./app/modules/product/product.router";
 import { orderRouter } from "./app/modules/order/order.routes";
 import { UserRouter } from "./app/modules/user/user.routes";
+import { authRouter } from "./app/modules/auth/auth.routes";
 
 
 
@@ -18,6 +19,7 @@ app.use("/api", productRouter);
 app.use("/api", orderRouter);
 
 app.use("/api/v1/", UserRouter)
+app.use("/api/v1/", authRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World! ");
