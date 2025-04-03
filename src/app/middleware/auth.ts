@@ -1,70 +1,95 @@
-// import { NextFunction, Request, Response } from "express"
+// import { NextFunction } from "express"
+// import jwt, { JwtPayload } from 'jsonwebtoken'; 
 // import catchAsync from "../../utils/catchAsync"
-// import httpStatus from 'http-status';
-// import AppError from "../../utils/AppError";
-// import jwt, { JwtPayload } from 'jsonwebtoken';
-// import config from "../config";
 // import { User } from "../modules/user/user.model";
-// import { TUserRole } from "../modules/user/user.interface";
+// import config from "../config";
 
 
-// const auth = (...requiredRoles: TUserRole[]) =>{
-//     return catchAsync(async (req: Request, res: Response, next: NextFunction)=> {
-//         const token = req.headers.authorization;
-        
-//         if (!token) {
-//             throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
-//           }
-//     // checking if the given token is valid
+// }
+
+// const auth = (requiredRoles: string) =>{
+//   return catchAsync(async(req: Request, res: Response, next: NextFunction) =>{
+//     const token = req.headers.authorization;
+//        if (!token) {
+//         throw new Error("token error")
+//        }
+
+//          // checking if the given token is valid
 //     const decoded = jwt.verify(
 //         token,
 //         config.jwt_access_secret as string,
 //       ) as JwtPayload;
-
-//       const { role, userId, iat } = decoded;
-
-//     // checking if the user is exist
-//     const user = await User.isUserExistsByCustomId(userId);
+  
+  
+//       const { role, email} = decoded;
+  
+//       // checking if the user is exist
+//     const user = await User.findOne({ email });
+  
 //     if (!user) {
-//       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+//       throw new Error('This user is not found !')
 //     }
-//     // checking if the user is already deleted
+//     // const userStatus = user?.userStatus
 
-//     const isDeleted = user?.isDeleted;
-
-//     if (isDeleted) {
-//       throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
-//     }
-
-//     // checking if the user is blocked
-//     const userStatus = user?.status;
-
-//     if (userStatus === 'blocked') {
-//       throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
-//     }
-//     if (
-//       user.passwordChangedAt &&
-//       User.isJWTIssuedBeforePasswordChanged(
-//         user.passwordChangedAt,
-//         iat as number,
-//       )
-//     ) {
-//       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
-//     }
+//     // if (userStatus === 'inactive') {
+//     //   throw new Error('This user is blocked ! !')
+//     // }
 
 //     if (requiredRoles && !requiredRoles.includes(role)) {
-//       throw new AppError(
-//         httpStatus.UNAUTHORIZED,
-//         'You are not authorized  hi!',
-//       );
-//     }
-//     req.user = decoded as JwtPayload & { role: string };
-//     next();
-//   });
+//         throw new Error(
+//           'You are not authorized',
+//         );
+//       }
+  
+//       req.user = decoded as JwtPayload;
+//       next();
 
 
-
-
-
-//     })
+//    })
 // }
+
+// export default auth;
+
+
+import { Request, Response, NextFunction } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import catchAsync from "../../utils/catchAsync";
+import { User } from "../modules/user/user.model";
+import config from "../config";
+import { TUserRole } from "../modules/user/user.interface";
+
+
+
+const auth = (...requiredRoles: TUserRole[]) => {
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization;
+    
+    
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized no token" });
+    }
+
+    try {
+      const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
+      const { role, email } = decoded;
+
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (requiredRoles && !requiredRoles.includes(decoded?.role)) {
+        throw new Error("You are not authorized" )
+      }
+
+      req.user = decoded as JwtPayload;
+      next();
+
+    } catch (error) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+  });
+};
+
+export default auth;
+

@@ -48,6 +48,7 @@ const getUserById = async (req: Request, res: Response, next : NextFunction) => 
   //  Get all users
   const getAllUsers = async (req: Request, res: Response, next : NextFunction) => {
     try {
+      console.log("testy", req.user)
       const users = await UserService.getAllUsers();
       return res.status(httpStatus.OK).json({
         success: true,
