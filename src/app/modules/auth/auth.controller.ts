@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { authServices } from "./auth.service";
 import sendResponse from "../../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import config from "../../config";
 
 
 
@@ -21,13 +22,22 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await authServices.loginIntoDb(req.body);
+    const { reFreshToken, accessUser, accessToken} = result
+
+     res.cookie("reFreshToken", reFreshToken, {
+      secure: config.node_env === "production",
+      httpOnly: true,
+     })
 
     sendResponse(res, {
       statusCode: StatusCodes.ACCEPTED,
       success: true,
       message: "Login successful",
-      token: result.token,
-      data: result.verifiedUser
+      data: {
+        accessToken,
+        reFreshToken,
+        accessUser,
+      }
     });
   } catch (err: any) {
     next(err);

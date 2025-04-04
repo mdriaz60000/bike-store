@@ -23,10 +23,12 @@ const loginIntoDb = async(payload : TLoginUser ) =>{
         throw new Error("password is wrong")
      }
     
-     const token = jwt.sign({email: user?.email, role: user?.role}, config.jwt_access_secret, {expiresIn : "2d"})
+     const accessToken = jwt.sign({email: user?.email, role: user?.role}, config.jwt_access_secret, {expiresIn : "2d"})
 
-     const verifiedUser = {name : user?.name, email: user?.email, role: user?.role}
-     return { token, verifiedUser}
+     const reFreshToken = jwt.sign({email: user?.email, role: user?.role}, config.jwt_refresh_secret, {expiresIn : "30d"})
+
+     const accessUser = {name : user?.name, email: user?.email, role: user?.role}
+     return {  accessUser, accessToken, reFreshToken}
 
 }
 
