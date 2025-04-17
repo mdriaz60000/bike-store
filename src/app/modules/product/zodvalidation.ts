@@ -1,13 +1,15 @@
 import { z } from "zod";
 
 const productSchemaValidation = z.object({
-  name: z.string().nonempty("Name is required"),
+  productName: z.string(),
   brand: z.string().nonempty("Brand is required"),
+  img: z.string().nonempty("img is required"),
   price: z.number().min(0, "Price must be at least 0"),
   category: z.enum(["Mountain", "Road", "Hybrid", "Electric"]),
   description: z.string().nonempty("Description is required"),
-  quantity: z.number().min(0, "Quantity cannot be less than 0").default(1),
+  quantity: z.number().default(0),
   inStock: z.boolean().default(true),
+  isDeleted :z.boolean().default(true)
 });
 
 export default productSchemaValidation

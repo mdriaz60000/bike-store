@@ -1,28 +1,57 @@
 import { NextFunction, Request, Response } from "express";
 import { orderService } from "./order.service";
-import orderValidationSchema from "./order.validation";
 
 
-
-const createOrder = async (req: Request, res: Response, next : NextFunction) => {
-    try {
-      const { order: orderData } = req.body;
-      
-      const orderValidation = orderValidationSchema.parse(orderData)
-  
-      const result = await orderService.createProductIntoDb(orderValidation);
-      res.status(200).json({
-        success: true,
-        massage: " create order successfully",
-        data: result,
-      });
-    } catch (err : any) {
-      next(err)
-    }
-  };
-
-
-
-  export const orderControllers = {
-    createOrder
+const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { orderEmail, productName, category, price, brand, img } = req.body;
+    const result = await orderService.createProductIntoDb(req.body);
+    res.status(200).json({
+      success: true,
+      massage: " create order successfully",
+      data: result,
+    });
+  } catch (err: any) {
+    next(err);
   }
+};
+ const getOrders = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // const { email } = req.query;
+
+    // const filter = email ? { email } : {};
+
+    const orders = await orderService.getOrderIntoDb();
+    res.status(200).json(orders);
+  } catch (err: any) {
+    next(err);
+  }
+};
+ const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+  const orderId = req.params._Id
+    console.log(orderId)
+
+    const orders = await orderService.deleteOrderIntoDb(orderId);
+    res.status(200).json(orders);
+  } catch (err: any) {
+    next(err);
+  }
+};
+ const payment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+  const orderId = req.params._Id
+    console.log(orderId)
+
+    const orders = await orderService.paymentIntoDb(orderId);
+    res.status(200).json(orders);
+  } catch (err: any) {
+    next(err);
+  }
+};
+
+export const orderControllers = {
+  createOrder,
+  getOrders,
+  payment
+};

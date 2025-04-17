@@ -5,8 +5,9 @@ import { product } from "./product.interface";
 
 const productSchema = new Schema<product>(
   {
-  name: { type: String, required: true },
+    productName: { type: String, required: true },
   brand: { type: String, required: true },
+  img: { type: String, required: true },
   price: { type: Number, required: true, min: 0},
   category: {
     type: String,
@@ -14,13 +15,24 @@ const productSchema = new Schema<product>(
     required: true,
   },
   description: { type: String, required: true },
-  quantity: { type: Number, default: 1,min:0},
+  quantity: { type: Number, default:0 },
   inStock: { type: Boolean, default: true },
+  isDeleted : {type: Boolean, default : false},
 },
 {
   timestamps: true,
 },
 );
+
+productSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+productSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
 
 export const productModel = model<product>("product", productSchema);

@@ -4,11 +4,11 @@ import productSchemaValidation from "./zodvalidation";
 
 const createProduct = async (req: Request, res: Response, next : NextFunction) => {
   try {
-    const { products: productsData } = req.body;
+    const {  productName, description, category, price, img, brand } = req.body;
 
-    const productValidation = productSchemaValidation.parse(productsData)
+    //  const productValidation = await productSchemaValidation(req.body)
 
-    const result = await productService.createProductIntoDb(productValidation);
+    const result = await productService.createProductIntoDb(req.body);
     res.status(200).json({
       success: true,
       massage: " create bike store product successfully",
@@ -67,16 +67,9 @@ const updateBike = async (req : Request, res: Response, next : NextFunction ) =>
 const deleteABike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
   const productId = req.params._Id
+  console.log(productId)
   
- const result = await productService.deleteABikeDb(productId)
-
-//  if (result.deletedCount === 0) {
-//   return res.status(404).json({
-//     success: false,
-//     message: `Bike not found with ID: ${productId}`,
-//   });
-// }
-
+  const result = await productService.deleteABikeDb(productId)
     res.status(200).json({
       success: true,
       massage: " delete single bike successfully",

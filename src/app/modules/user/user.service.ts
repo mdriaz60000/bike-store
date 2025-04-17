@@ -28,11 +28,9 @@ export class UserService {
   }
 
   //  Soft delete a user (sets isDeleted to true)
-  static async deleteUser(id: string): Promise<TUser | null> {
-    return await User.findOneAndUpdate(
-      { id }, 
-      { isDeleted: true }, 
-      { new: true }
-    );
+  static async deleteUser(id: string) {
+    const result = await User.updateOne({ _id: id }, { isDeleted: true });
+    return result;
   }
+  
 }

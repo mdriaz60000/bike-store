@@ -1,6 +1,10 @@
 export interface Order {
-    email: string;
-    product: string;
-    quantity: number;
-    totalPrice: number;
+    orderEmail: string;
+    productName: string;
+    category: string
+    price: number;
+    brand: string;
+    img: string;
+    inStock: boolean;
+  isDeleted : boolean
 }

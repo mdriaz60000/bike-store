@@ -19,7 +19,7 @@ const updateBikeDb = async (productId : string, updateData: product) => {
   return result;
 };
 const deleteABikeDb = async (productId : string) => {
-  const result = await productModel.findByIdAndDelete(productId); 
+  const result = await productModel.updateOne({productId}, {isDeleted: true}); 
   return result;
 };
 
