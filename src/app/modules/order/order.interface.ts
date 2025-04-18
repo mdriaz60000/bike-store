@@ -1,5 +1,6 @@
 export interface Order {
     orderEmail: string;
+    userName: string;
     productName: string;
     category: string
     price: number;

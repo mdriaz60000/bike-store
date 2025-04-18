@@ -1,36 +1,34 @@
 import { User } from './user.model';
 import { TUser } from './user.interface';
 
-export class UserService {
-  //  Create a new user
-  static async createUser(userData: TUser): Promise<TUser> {
-    const newUser = await User.create(userData);
-    return newUser;
-  }
+const createUserDb = async (userData: TUser) => {
+  const result = await User.create(userData); 
+  return result;
+};
+const getAllUserDb = async () => {
+  const result = await User.find().select('-password'); 
+  return result;
+};
 
-  //  Get a user by ID (excluding deleted users)
-  static async getUserById(id: string): Promise<TUser | null> {
-    return await User.findOne({ id, isDeleted: false }).select('-password');
-  }
+const getUserIdDb = async (id: string) => {
+  const result = await User.findOne({id}); 
+  return result;
 
-  //  Get all users (excluding deleted users)
-  static async getAllUsers(): Promise<TUser[]> {
-    return await User.find({ isDeleted: false }).select('-password');
-  }
+}
+const updateUserDb = async (userId : string, updateData:TUser) => {
+  const result = await User.findByIdAndUpdate(userId, updateData,  { new: true }).select('-password'); 
+  return result;
+};
+const deleteUserDb = async (userId : string) => {
+  const result = await User.findByIdAndUpdate({_id:userId},  { isDeleted: true }); 
+  return result;
+};
 
-  //  Update a user
-  static async updateUser(id: string, updateData: Partial<TUser>): Promise<TUser | null> {
-    return await User.findOneAndUpdate(
-      { id, isDeleted: false }, 
-      updateData, 
-      { new: true, runValidators: true }
-    ).select('-password');
-  }
+export const UserService = {
+  createUserDb,
+  getAllUserDb,
+  getUserIdDb,
+  updateUserDb,
+  deleteUserDb
 
-  //  Soft delete a user (sets isDeleted to true)
-  static async deleteUser(id: string) {
-    const result = await User.updateOne({ _id: id }, { isDeleted: true });
-    return result;
-  }
-  
 }

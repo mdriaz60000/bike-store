@@ -7,9 +7,7 @@ import { UserService } from './user.service';
       const {name, email, password  } = req.body
       console.log(email, password, name)
       const userData : any = { name, email, password };
-
-      
-      const result = await UserService.createUser(userData)
+      const result = await UserService.createUserDb(userData)
       res.status(200).json({
         success: true,
         massage: " User created successfully",
@@ -23,22 +21,22 @@ import { UserService } from './user.service';
 
 
   //  Get a user by ID
-const getUserById = async (req: Request, res: Response, next : NextFunction) => {
+const getUserById = async (req: Request, res: Response, ) => {
     try {
       const  id = req.params._Id;
-      const user = await UserService.getUserById(id);
+      const user = await UserService.getUserIdDb(id);
       if (!user) {
-        return res.status(httpStatus.NOT_FOUND).json({
+         res.status(httpStatus.NOT_FOUND).json({
           success: false,
           message: 'User not found',
         });
       }
-      return res.status(httpStatus.OK).json({
+       res.status(httpStatus.OK).json({
         success: true,
         data: user,
       });
     } catch (error: any) {
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+       res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: error.message,
       });
@@ -46,16 +44,16 @@ const getUserById = async (req: Request, res: Response, next : NextFunction) => 
   }
 
   //  Get all users
-  const getAllUsers = async (req: Request, res: Response, next : NextFunction) => {
+  const getAllUsers = async (req: Request, res: Response) => {
     try {
       console.log("testy", req.user)
-      const users = await UserService.getAllUsers();
-      return res.status(httpStatus.OK).json({
+      const users = await UserService.getAllUserDb();
+       res.status(httpStatus.OK).json({
         success: true,
         data: users,
       });
     } catch (error: any) {
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+       res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: error.message,
       });
@@ -63,47 +61,47 @@ const getUserById = async (req: Request, res: Response, next : NextFunction) => 
   }
 
   // Update a user
- const updateUser = async (req: Request, res: Response, next : NextFunction) => {
+ const updateUser = async (req: Request, res: Response,) => {
     try {
       const  id  = req.params._id;
       const body = req.body
-      const updatedUser = await UserService.updateUser(id, body);
+      const updatedUser = await UserService.updateUserDb(id, body);
       if (!updatedUser) {
-        return res.status(httpStatus.NOT_FOUND).json({
+         res.status(httpStatus.NOT_FOUND).json({
           success: false,
           message: 'User not found',
         });
       }
-      return res.status(httpStatus.OK).json({
+       res.status(httpStatus.OK).json({
         success: true,
         message: 'User updated successfully',
         data: updatedUser,
       });
     } catch (error: any) {
-      return res.status(httpStatus.BAD_REQUEST).json({
+       res.status(httpStatus.BAD_REQUEST).json({
         success: false,
         message: error.message,
       });
     }
   }
 
-  //  Soft delete a user (sets isDeleted to true)
-const deleteUser = async(req: Request, res: Response, next : NextFunction) => {
+  
+const deleteUser = async(req: Request, res: Response) => {
     try {
       const  id  = req.params._id
-      const deletedUser = await UserService.deleteUser(id);
+      const deletedUser = await UserService.deleteUserDb(id);
       // if (!deletedUser) {
       //   return res.status(httpStatus.NOT_FOUND).json({
       //     success: false,
       //     message: 'User not found',
       //   });
       // }
-      return res.status(httpStatus.OK).json({
+       res.status(httpStatus.OK).json({
         success: true,
         message: 'User deleted successfully',
       });
     } catch (error: any) {
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+       res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: error.message,
       });

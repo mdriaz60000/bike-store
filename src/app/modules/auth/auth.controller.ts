@@ -3,16 +3,36 @@ import { authServices } from "./auth.service";
 import sendResponse from "../../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import config from "../../config";
-
+import jwt from 'jsonwebtoken';
 
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await authServices.registerIntoDb(req.body);
-    res.status(200).json({
+    
+    
+    const { email, role, name } = result;
+    const accessToken = jwt.sign({ email, role }, config.jwt_access_secret as string, { expiresIn: "2d" });
+    const reFreshToken = jwt.sign({ email, role }, config.jwt_refresh_secret as string, { expiresIn: "30d" });
+
+   
+    res.cookie("reFreshToken", reFreshToken, {
+      secure: config.node_env === "production",
+      httpOnly: true,
+    });
+
+    sendResponse(res, {
+      statusCode: StatusCodes.CREATED, 
       success: true,
-      message: "Created bike store product successfully",
-      data: result,
+      message: "User registered successfully",
+      data: {
+        accessToken,
+        user: {
+          name,
+          email,
+          role
+        }
+      }
     });
   } catch (err: any) {
     next(err);

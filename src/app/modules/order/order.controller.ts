@@ -38,20 +38,10 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
- const payment = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-  const orderId = req.params._Id
-    console.log(orderId)
-
-    const orders = await orderService.paymentIntoDb(orderId);
-    res.status(200).json(orders);
-  } catch (err: any) {
-    next(err);
-  }
-};
+ 
 
 export const orderControllers = {
   createOrder,
   getOrders,
-  payment
+  
 };
