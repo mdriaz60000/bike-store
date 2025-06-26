@@ -8,7 +8,7 @@ const createProduct = async (req: Request, res: Response, next : NextFunction) =
 
     //  const productValidation = await productSchemaValidation(req.body)
 
-    const result = await productService.createProductIntoDb(req.body);
+    const result = await productService.createBikeFromDb(req.body);
     res.status(200).json({
       success: true,
       massage: " create bike store product successfully",
@@ -21,7 +21,7 @@ const createProduct = async (req: Request, res: Response, next : NextFunction) =
 
 const getAllBike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
-    const result = await productService.getAllProductDb()
+    const result = await productService.getAllBikeFromDb()
     res.status(200).json({
       success: true,
       massage: " create bike store product successfully",
@@ -33,11 +33,11 @@ const getAllBike = async (req : Request, res: Response, next : NextFunction) =>{
   next(err)
   }
 }
-const getABike = async (req : Request, res: Response, next : NextFunction) =>{
+const getSingleBike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
   const  id = req.params._Id;
 
-    const result = await productService.getProductIdDb(id)
+    const result = await productService.getSingleBikeDb(id)
 
     res.status(200).json({
       success: true,
@@ -51,9 +51,9 @@ const getABike = async (req : Request, res: Response, next : NextFunction) =>{
 
 const updateBike = async (req : Request, res: Response, next : NextFunction ) =>{
   try {
-  const productId = req.params._Id
+  const {id} = req.params
   const body = req.body
- const result = await productService.updateBikeDb(productId, body )
+ const result = await productService.updateBikeDb(id, body )
 
     res.status(200).json({
       success: true,
@@ -66,10 +66,8 @@ const updateBike = async (req : Request, res: Response, next : NextFunction ) =>
 }
 const deleteABike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
-  const productId = req.params._Id
-  console.log(productId)
-  
-  const result = await productService.deleteABikeDb(productId)
+  const{ id }= req.params
+  const result = await productService.deleteABikeDb(id )
     res.status(200).json({
       success: true,
       massage: " delete single bike successfully",
@@ -82,7 +80,7 @@ const deleteABike = async (req : Request, res: Response, next : NextFunction) =>
 export const productControllers = {
   createProduct,
   getAllBike,
-  getABike,
+  getSingleBike,
   updateBike,
   deleteABike
 };

@@ -6,7 +6,9 @@ const createUserDb = async (userData: TUser) => {
   return result;
 };
 const getAllUserDb = async () => {
-  const result = await User.find().select('-password'); 
+  const result = await User.find({
+    isDeleted: false
+  }).select("-password"); 
   return result;
 };
 
@@ -15,12 +17,18 @@ const getUserIdDb = async (id: string) => {
   return result;
 
 }
-const updateUserDb = async (userId : string, updateData:TUser) => {
-  const result = await User.findByIdAndUpdate(userId, updateData,  { new: true }).select('-password'); 
+const updateUserDb = async (userId: string, updateData: TUser) => {
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { $set: updateData },
+    { new: true }
+  ).select('-password') 
   return result;
 };
 const deleteUserDb = async (userId : string) => {
-  const result = await User.findByIdAndUpdate({_id:userId},  { isDeleted: true }); 
+  const result = await User.updateOne(
+    { _id: userId}, 
+     { isDeleted: true }); 
   return result;
 };
 

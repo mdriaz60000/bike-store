@@ -5,7 +5,7 @@ import { orderService } from "./order.service";
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { orderEmail, productName, category, price, brand, img } = req.body;
-    const result = await orderService.createProductIntoDb(req.body);
+    const result = await orderService.createOrderIntoDb(req.body);
     res.status(200).json({
       success: true,
       massage: " create order successfully",
@@ -15,13 +15,19 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
- const getOrders = async (req: Request, res: Response, next: NextFunction) => {
+ const getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // const { email } = req.query;
-
-    // const filter = email ? { email } : {};
-
-    const orders = await orderService.getOrderIntoDb();
+    const orders = await orderService.getAllOrderIntoDb();
+    res.status(200).json(orders);
+  } catch (err: any) {
+    next(err);
+  }
+};
+ const getOrderId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+     const { id } = req.params;
+   
+    const orders = await orderService.getOrderIdIntoDb(id);
     res.status(200).json(orders);
   } catch (err: any) {
     next(err);
@@ -29,10 +35,9 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 };
  const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-  const orderId = req.params._Id
-    console.log(orderId)
-
-    const orders = await orderService.deleteOrderIntoDb(orderId);
+  const {id} = req.params
+ 
+    const orders = await orderService.deleteOrderIntoDb(id);
     res.status(200).json(orders);
   } catch (err: any) {
     next(err);
@@ -42,6 +47,8 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 
 export const orderControllers = {
   createOrder,
-  getOrders,
+  getAllOrders,
+  getOrderId,
+  deleteOrder
   
 };

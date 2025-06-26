@@ -20,6 +20,10 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
       secure: config.node_env === "production",
       httpOnly: true,
     });
+    res.cookie("accessToken", accessToken, {
+      secure: config.node_env === "production",
+      httpOnly: true,
+    });
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED, 
@@ -45,6 +49,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const { reFreshToken, accessUser, accessToken} = result
 
      res.cookie("reFreshToken", reFreshToken, {
+      secure: config.node_env === "production",
+      httpOnly: true,
+     })
+     res.cookie("accessToken", accessToken, {
       secure: config.node_env === "production",
       httpOnly: true,
      })

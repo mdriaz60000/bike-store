@@ -5,7 +5,7 @@ import { UserService } from './user.service';
   const  createUser = async (req: Request, res: Response, next : NextFunction) => {
     try {
       const {name, email, password  } = req.body
-      console.log(email, password, name)
+      
       const userData : any = { name, email, password };
       const result = await UserService.createUserDb(userData)
       res.status(200).json({
@@ -23,7 +23,7 @@ import { UserService } from './user.service';
   //  Get a user by ID
 const getUserById = async (req: Request, res: Response, ) => {
     try {
-      const  id = req.params._Id;
+      const  {id }= req.params;
       const user = await UserService.getUserIdDb(id);
       if (!user) {
          res.status(httpStatus.NOT_FOUND).json({
@@ -46,7 +46,7 @@ const getUserById = async (req: Request, res: Response, ) => {
   //  Get all users
   const getAllUsers = async (req: Request, res: Response) => {
     try {
-      console.log("testy", req.user)
+      
       const users = await UserService.getAllUserDb();
        res.status(httpStatus.OK).json({
         success: true,
@@ -63,7 +63,7 @@ const getUserById = async (req: Request, res: Response, ) => {
   // Update a user
  const updateUser = async (req: Request, res: Response,) => {
     try {
-      const  id  = req.params._id;
+      const { id } = req.params;
       const body = req.body
       const updatedUser = await UserService.updateUserDb(id, body);
       if (!updatedUser) {
@@ -88,14 +88,9 @@ const getUserById = async (req: Request, res: Response, ) => {
   
 const deleteUser = async(req: Request, res: Response) => {
     try {
-      const  id  = req.params._id
+      const  {id } = req.params
       const deletedUser = await UserService.deleteUserDb(id);
-      // if (!deletedUser) {
-      //   return res.status(httpStatus.NOT_FOUND).json({
-      //     success: false,
-      //     message: 'User not found',
-      //   });
-      // }
+    
        res.status(httpStatus.OK).json({
         success: true,
         message: 'User deleted successfully',
