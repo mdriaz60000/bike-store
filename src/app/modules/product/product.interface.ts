@@ -7,6 +7,8 @@ export type product = {
   img:  string;
   category: "Mountain" | "Road" | "Hybrid" | "Electric";
   description: string;
+  rating: number;
+  offer?: number;
   quantity: number;
   inStock: boolean;
   isDeleted : boolean

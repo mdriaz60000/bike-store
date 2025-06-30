@@ -4,7 +4,7 @@ import auth from "../../middleware/auth";
 
 const router = express.Router();
 
-router.post("/products", auth("admin"), productControllers.createProduct);
+router.post("/products", productControllers.createProduct);
 
 router.get("/products", productControllers.getAllBike)
 
@@ -14,5 +14,6 @@ router.patch("/updateProducts/:id", auth("admin"), productControllers.updateBike
 
 router.patch("/deleteProduct/:id", auth("admin"), productControllers.deleteABike);
 
+router.get("/productSearch", productControllers.searchBike);
 
 export const productRouter = router;

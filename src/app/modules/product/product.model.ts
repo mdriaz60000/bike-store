@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { product } from "./product.interface";
+import { number } from "zod";
 
 
 
@@ -15,6 +16,8 @@ const productSchema = new Schema<product>(
     required: true,
   },
   description: { type: String, required: true },
+  rating: {type:Number, default: 0},
+  offer: {type: Number},
   quantity: { type: Number, default:0 },
   inStock: { type: Boolean, default: true },
   isDeleted : {type: Boolean, default : false},

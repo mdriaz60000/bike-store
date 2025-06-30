@@ -3,6 +3,7 @@ import { product } from "./product.interface";
 import { productModel } from "./product.model";
 
 const createBikeFromDb = async (Product: product) => {
+  
   const result = await productModel.create(Product);
   return result;
 };
@@ -31,10 +32,31 @@ const deleteABikeDb = async (productId: string) => {
   return result;
 };
 
+
+
+const searchBikeDb = async (query: Record<string, unknown>) => {
+
+  let searchTerm = query?.searchTerm ? query?.searchTerm : ""
+  const result = await productModel.find({
+      $or: [
+    { brand: { $regex: searchTerm, $options: "i" } },
+    { model: { $regex: searchTerm, $options: "i" } },
+  ],
+  }
+  );
+
+  return result;
+};
+
+export default {
+  searchBikeDb,
+};
+
 export const productService = {
   createBikeFromDb,
   getAllBikeFromDb,
   getSingleBikeDb,
   updateBikeDb,
   deleteABikeDb,
+  searchBikeDb
 };

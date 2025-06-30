@@ -4,10 +4,7 @@ import productSchemaValidation from "./zodvalidation";
 
 const createProduct = async (req: Request, res: Response, next : NextFunction) => {
   try {
-    const {  productName, description, category, price, img, brand } = req.body;
-
-    //  const productValidation = await productSchemaValidation(req.body)
-
+ 
     const result = await productService.createBikeFromDb(req.body);
     res.status(200).json({
       success: true,
@@ -77,10 +74,28 @@ const deleteABike = async (req : Request, res: Response, next : NextFunction) =>
   next(err)
   }
 }
+
+
+export const searchBike = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    
+//  console.log(req.query)
+     const result = await productService.searchBikeDb(req.query);
+
+    res.status(200).json({
+      success: true,
+      message: "Search bike successfully",
+      data: result,
+    });
+  } catch (err: any) {
+    next(err);
+  }
+};
 export const productControllers = {
   createProduct,
   getAllBike,
   getSingleBike,
   updateBike,
-  deleteABike
+  deleteABike,
+  searchBike
 };
