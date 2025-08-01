@@ -18,6 +18,7 @@ const createProduct = async (req: Request, res: Response, next : NextFunction) =
 
 const getAllBike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
+    
     const result = await productService.getAllBikeFromDb()
     res.status(200).json({
       success: true,
@@ -32,7 +33,7 @@ const getAllBike = async (req : Request, res: Response, next : NextFunction) =>{
 }
 const getSingleBike = async (req : Request, res: Response, next : NextFunction) =>{
   try {
-  const  id = req.params._Id;
+  const { id }= req.params;
 
     const result = await productService.getSingleBikeDb(id)
 
@@ -91,11 +92,30 @@ export const searchBike = async (req: Request, res: Response, next: NextFunction
     next(err);
   }
 };
+
+
+const paginationBike = async (req : Request, res: Response, next : NextFunction) =>{
+  try {
+    
+    const result = await productService.PaginationBikesDb(req.query)
+    res.status(200).json({
+      success: true,
+      massage: " create bike store product successfully",
+      data: result,
+    });
+
+
+  }catch (err : any) {
+  next(err)
+  }
+}
+
 export const productControllers = {
   createProduct,
   getAllBike,
   getSingleBike,
   updateBike,
   deleteABike,
-  searchBike
+  searchBike,
+  paginationBike
 };
